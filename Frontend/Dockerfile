@@ -1,25 +1,23 @@
-# Use official Node.js image as base
-FROM node:14
 
-# Set working directory inside the container
+
+
+# Use a newer version of Node.js (Node 18 or higher)
+FROM node:18
+
+# Set the working directory
 WORKDIR /app-frontend
 
-# Copy package.json and package-lock.json to container
+# Copy the contents of the frontend application to the container
 COPY . .
 
-# Install Angular CLI globally
+# Install Angular CLI globally with the compatible Node.js version
 RUN npm install -g @angular/cli
 
-# Install dependencies
+# Install the project dependencies
 RUN npm install
 
-# Copy the rest of the application code to container
-COPY . .
+# Expose the port the app will run on
+EXPOSE 4200
 
-# Build the Angular app for production
-RUN npm run build
-
-
-
-# Command to run the Angular development server
-CMD ["npm","start"]
+# Command to start the Angular application
+CMD ["ng", "serve", "--host", "0.0.0.0"]
