@@ -1,8 +1,7 @@
 
 
-FROM node:18-alpine
-# Use a newer version of Node.js (Node 18 or higher)
-#FROM node:18
+
+FROM node:14
 
 # Set the working directory
 WORKDIR /app-frontend
