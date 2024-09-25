@@ -13,7 +13,7 @@ COPY . .
 RUN npm install -g @angular/cli
 
 # Install the project dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Expose the port the app will run on
 EXPOSE 4200
