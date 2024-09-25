@@ -8,7 +8,7 @@ WORKDIR /app-backend
 COPY . .
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code to container
 COPY . .
