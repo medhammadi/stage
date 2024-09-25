@@ -1,21 +1,19 @@
-version: '3.5'
+version: '3'
 
 services:
   # Frontend service configuration
   frontend:
     container_name: ng_frontend
-    build: ./Frontend
+    build: ./Front
     ports:
       - 4200:4200
-    platform: linux/x86_64
     working_dir: /app-frontend
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:4200
+      - NEXT_PUBLIC_API_URL=http://backend:9000
     healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:3000"]
+      test: ["CMD", "lsof", "-t", "-i:4200"]
       timeout: 10s
       retries: 5
 
@@ -25,41 +23,12 @@ services:
     build: ./Backend
     ports:
       - 9000:9000
-    platform: linux/x86_64
     working_dir: /app-backend
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
-      - APP_PORT=3001
+      - APP_PORT=9000
       - JWT_SECRET=jwt_secret
-      - DB_USER=postgres
-      - DB_PASS=123456
-      - DB_HOST=db
-      - DB_PORT=5432
+      - MONGODB_URI=mongodb+srv://root:root@cluster0.bdozs6y.mongodb.net/pfa?retryWrites=true&w=majority
     healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:3001"]
+      test: ["CMD", "lsof", "-t", "-i:9000"]
       timeout: 10s
       retries: 5
-
-  # Database service configuration
-  db:
-    image: postgres:latest
-    container_name: postgres_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: your_database_name
-    ports:
-      - 5432:5432
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-volumes:
-  db_data:
