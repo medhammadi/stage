@@ -4,56 +4,62 @@ services:
   # Frontend service configuration
   frontend:
     container_name: ng_frontend
-    build: ./Frontend                        # Path to frontend Dockerfile
+    build: ./Frontend
     ports:
-      - 4200:4200                           # Map host port 3000 to container port 3000
-    platform: linux/x86_64                  # Platform specification
-    working_dir: /app-frontend              # Working directory inside the container
+      - 4200:4200
+    platform: linux/x86_64
+    working_dir: /app-frontend
     depends_on:
       backend:
-        condition: service_healthy         # Wait for backend service to be healthy
+        condition: service_healthy
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:4200   # Set environment variable for frontend
+      - NEXT_PUBLIC_API_URL=http://localhost:4200
     healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:3000"]   # Health check command
-      timeout: 10s                              # Health check timeout
-      retries: 5                                # Number of health check retries
+      test: ["CMD", "lsof", "-t", "-i:3000"]
+      timeout: 10s
+      retries: 5
 
   # Backend service configuration
   backend:
     container_name: ng_backend
-    build: ./Backend                         # Path to backend Dockerfile
+    build: ./Backend
     ports:
-      - 9000:9000                           # Map host port 3001 to container port 3001
-    platform: linux/x86_64                  # Platform specification
-    working_dir: /app-backend               # Working directory inside the container
+      - 9000:9000
+    platform: linux/x86_64
+    working_dir: /app-backend
     depends_on:
       db:
-        condition: service_healthy         # Wait for database service to be healthy
+        condition: service_healthy
     environment:
       - APP_PORT=3001
       - JWT_SECRET=jwt_secret
       - DB_USER=postgres
       - DB_PASS=123456
       - DB_HOST=db
-      - DB_PORT=5432                        # Set environment variables for backend
+      - DB_PORT=5432
     healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:3001"]   # Health check command
-      timeout: 10s                              # Health check timeout
-      retries: 5                                # Number of health check retries
+      test: ["CMD", "lsof", "-t", "-i:3001"]
+      timeout: 10s
+      retries: 5
 
   # Database service configuration
   db:
-    image: postgres:latest                  # Use the latest PostgreSQL image
+    image: postgres:latest
     container_name: postgres_db
     environment:
-      POSTGRES_USER: postgres               # PostgreSQL username
-      POSTGRES_PASSWORD: 123456             # PostgreSQL password
-      POSTGRES_DB: your_database_name       # PostgreSQL database name
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: your_database_name
     ports:
-      - 5432:5432                           # Map PostgreSQL port 5432
+      - 5432:5432
     volumes:
-      - db_data:/var/lib/postgresql/data    # Persist PostgreSQL data
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 volumes:
-  db_data:                                  # Volume for database data persistence
+  db_data:
