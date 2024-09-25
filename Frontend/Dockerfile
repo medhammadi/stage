@@ -1,22 +1,20 @@
+# Étape 1 : Utiliser l'image Node.js officielle comme image de base
+FROM node:14 as builder
 
-
-
-FROM node:18-alpine
-
-# Set the working directory
+# Étape 2 : Définir le répertoire de travail dans le conteneur
 WORKDIR /app-frontend
 
-# Copy the contents of the frontend application to the container
+# Étape 3 : Copier les fichiers package.json et package-lock.json
+COPY package*.json ./
+
+# Étape 4 : Installer les dépendances
+RUN npm install --force
+
+# Étape 5 : Copier le reste des fichiers de l'application
 COPY . .
 
-# Install Angular CLI globally with the compatible Node.js version
-RUN npm install -g @angular/cli
-
-# Install the project dependencies
-RUN npm install --legacy-peer-deps
-
-# Expose the port the app will run on
+# Étape 6 : Exposer le port 4200
 EXPOSE 4200
 
-# Command to start the Angular application
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+# Étape 7 : Commande par défaut pour démarrer l'application
+CMD ["npm", "run", "start"]
