@@ -42,5 +42,18 @@ services:
       timeout: 10s                              # Health check timeout
       retries: 5                                # Number of health check retries
 
-  # Database service (not present in provided file)
-  # Add database service configuration if applicable
+  # Database service configuration
+  db:
+    image: postgres:latest                  # Use the latest PostgreSQL image
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres               # PostgreSQL username
+      POSTGRES_PASSWORD: 123456             # PostgreSQL password
+      POSTGRES_DB: your_database_name       # PostgreSQL database name
+    ports:
+      - 5432:5432                           # Map PostgreSQL port 5432
+    volumes:
+      - db_data:/var/lib/postgresql/data    # Persist PostgreSQL data
+
+volumes:
+  db_data:                                  # Volume for database data persistence
