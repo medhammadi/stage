@@ -3,7 +3,7 @@ version: '3'
 services:
   # Frontend service configuration
   frontend:
-    container_name: ng_frontend
+    container_name: container-frontend
     build: ./Front
     ports:
       - 4200:4200
@@ -19,16 +19,19 @@ services:
 
   # Backend service configuration
   backend:
-    container_name: ng_backend
+    container_name: container-backend
     build: ./Backend
     ports:
       - 9000:9000
     working_dir: /app-backend
-    environment:
-      - APP_PORT=9000
-      - JWT_SECRET=jwt_secret
-      - MONGODB_URI=mongodb+srv://root:root@cluster0.bdozs6y.mongodb.net/pfa?retryWrites=true&w=majority
-    healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:9000"]
-      timeout: 10s
-      retries: 5
+environment:
+  - APP_PORT=9000                     
+  - JWT_SECRET=YourSuperSecretKey!   
+  - MONGODB_URI=mongodb+srv://admin:admin@myCustomCluster.mongodb.net/myAppDB?retryWrites=true&w=majority 
+
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:9000/health"]  # Vérifie l'état de l'application via l'endpoint /health
+  interval: 30s               # Intervalle entre les vérifications de santé
+  timeout: 5s                 # Durée maximale pour qu'un test réussisse
+  retries: 3                  # Nombre de tentatives avant de déclarer une défaillance
+
