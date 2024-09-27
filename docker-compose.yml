@@ -1,4 +1,12 @@
-version: '3'
+
+
+
+
+
+
+
+
+      version: '3'
 
 services:
   # Frontend service configuration
@@ -24,12 +32,11 @@ services:
     ports:
       - 9000:9000
     working_dir: /app-backend
-    environment: # Déplacez cette section ici, sous le service 'backend'
-      - APP_PORT=9000                     
-      - JWT_SECRET=YourSuperSecretKey!   
-      - MONGODB_URI=mongodb+srv://admin:admin@myCustomCluster.mongodb.net/myAppDB?retryWrites=true&w=majority 
-    healthcheck:  # Vérification de l'état de santé du service backend
-      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
+    environment:
+      - APP_PORT=9000
+      - JWT_SECRET=jwt_secret
+      - MONGODB_URI=mongodb+srv://root:root@cluster0.bdozs6y.mongodb.net/pfa?retryWrites=true&w=majority
+    healthcheck:
+      test: ["CMD", "lsof", "-t", "-i:9000"]
+      timeout: 10s
+      retries: 5
