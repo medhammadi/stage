@@ -1,17 +1,9 @@
-
-
-
-
-
-
-
-
-      version: '3'
+version: '3'
 
 services:
   # Frontend service configuration
   frontend:
-    container_name: container-frontend
+    container_name: ng_frontend
     build: ./Front
     ports:
       - 4200:4200
@@ -27,7 +19,7 @@ services:
 
   # Backend service configuration
   backend:
-    container_name: container-backend
+    container_name: ng_backend
     build: ./Backend
     ports:
       - 9000:9000
