@@ -1,3 +1,4 @@
+
 # Étape 1 : Utiliser l'image Node.js officielle comme image de base
 FROM node:14 as builder
 
